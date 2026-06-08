@@ -1,30 +1,38 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("/bricolage-grotesque-latin-700-normal.98c7e45d.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --bg: #f7f5ef;
-  --bg-soft: #efece4;
-  --surface: #ffffff;
-  --surface-2: #f1eee6;
-  --line: #e3dfd3;
-  --line-2: #d4cfc1;
+  --bg: #100e0a;
   --fg: #14130f;
-  --fg-2: #4a4843;
-  --muted: #8a877f;
-  --muted-2: #b8b4a9;
-  --accent: oklch(0.72 0.2 145);
-  --accent-ink: #06160c;
+  --accent: #84c578;
+  --accent-glow: #d9f4cd;
+  --accent-ink: #0d2412;
   --coral: oklch(0.62 0.18 25);
   --gold: oklch(0.72 0.13 80);
   --display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   --mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
   --density: 1;
-}
 
-@theme inline {
-  --color-background: var(--bg);
-  --color-foreground: var(--fg);
-  --font-sans: var(--display);
-  --font-mono: var(--mono);
+  /* soft 3D surface language */
+  --surface: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025));
+  --surface-raised:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -14px 28px -16px rgba(0, 0, 0, 0.55),
+    0 24px 60px -28px rgba(0, 0, 0, 0.7);
+  --surface-inset:
+    inset 0 1px 2px rgba(255, 255, 255, 0.06),
+    inset 0 -3px 10px rgba(0, 0, 0, 0.4);
+  --button-sheen:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.16),
+    0 10px 28px -12px color-mix(in oklch, var(--accent) 65%, transparent);
 }
 
 *,
@@ -67,14 +75,6 @@ select {
   color: var(--accent-ink);
 }
 
-.noscroll::-webkit-scrollbar {
-  display: none;
-}
-
-.noscroll {
-  scrollbar-width: none;
-}
-
 @keyframes turnup-pulse-ring {
   0% {
     transform: scale(1);
@@ -92,28 +92,6 @@ select {
   }
 }
 
-@keyframes turnup-scroll-x {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-33.333%);
-  }
-}
-
-@keyframes turnup-fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes turnup-aurora-shift {
   0% {
     transform: translate3d(0, 0, 0) scale(1);
@@ -124,100 +102,109 @@ select {
   }
 }
 
-@media (max-width: 1100px) {
-  .turnup-hero-grid,
-  .turnup-feature-grid,
-  .turnup-organisers-grid,
-  .turnup-teaser-grid,
-  .turnup-faq-grid {
-    grid-template-columns: 1fr !important;
-    gap: 40px !important;
+@keyframes turnup-aurora-drift {
+  0% {
+    transform: translate3d(-2%, 1%, 0) scale(1) rotate(0deg);
   }
 
-  .turnup-phone-stage {
-    height: 520px !important;
+  50% {
+    transform: translate3d(2%, -2%, 0) scale(1.07) rotate(4deg);
   }
 
-  .turnup-three-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  .turnup-footer-grid {
-    grid-template-columns: 1.3fr 1fr 1fr !important;
-  }
-
-  .turnup-quotes-grid {
-    column-count: 2 !important;
+  100% {
+    transform: translate3d(-2%, 1%, 0) scale(1) rotate(0deg);
   }
 }
 
-@media (max-width: 900px) {
-  .turnup-nav-inner {
-    padding: 14px 20px !important;
+@keyframes turnup-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
   }
 
-  .turnup-nav-links,
-  .turnup-nav-badges {
-    display: none !important;
-  }
-
-  .turnup-phone-stage {
-    height: 440px !important;
-  }
-
-  .turnup-phone-left {
-    left: 0 !important;
-    top: 4% !important;
-  }
-
-  .turnup-phone-right {
-    right: 0 !important;
-    top: 12% !important;
-  }
-
-  .turnup-organiser-metrics,
-  .turnup-footer-grid {
-    grid-template-columns: 1fr 1fr !important;
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
   }
 }
 
-@media (max-width: 700px) {
-  .turnup-page section,
-  .turnup-page footer {
-    padding-left: 20px !important;
-    padding-right: 20px !important;
+@keyframes turnup-float {
+  0%,
+  100% {
+    transform: perspective(1400px) rotateX(6deg) rotateY(-12deg) translate3d(0, 0, 0);
   }
 
-  .turnup-hero-section {
-    padding-top: 40px !important;
+  50% {
+    transform: perspective(1400px) rotateX(6deg) rotateY(-12deg) translate3d(0, -8px, 0);
   }
+}
 
-  .turnup-phone-stage {
-    height: 360px !important;
-  }
+.tu-glow-btn {
+  transition: transform 220ms cubic-bezier(.2,.7,.2,1), box-shadow 260ms ease, filter 220ms ease;
+}
 
-  .turnup-phone {
-    width: min(250px, 78vw) !important;
-  }
+.tu-glow-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.16),
+    0 18px 44px -16px color-mix(in oklch, var(--accent) 75%, transparent);
+}
 
-  .turnup-phone-left .turnup-phone {
-    width: min(220px, 68vw) !important;
-  }
+.tu-glass-btn {
+  transition: transform 220ms cubic-bezier(.2,.7,.2,1), box-shadow 280ms ease, background 280ms ease;
+}
 
-  .turnup-quotes-grid {
-    column-count: 1 !important;
-  }
+@property --tu-beam-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
 
-  .turnup-footer-grid {
-    grid-template-columns: 1fr !important;
+@keyframes turnup-beam-spin {
+  to {
+    --tu-beam-angle: 360deg;
   }
+}
 
-  .turnup-footer-bottom {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-  }
+.tu-beam-btn {
+  position: relative;
+  z-index: 0;
+}
 
-  .turnup-floating-card {
-    display: none !important;
-  }
+.tu-beam-btn::before {
+  content: "";
+  position: absolute;
+  inset: -2.5px;
+  border-radius: inherit;
+  padding: 2.5px;
+  background: conic-gradient(
+    from var(--tu-beam-angle),
+    transparent 0deg,
+    transparent 290deg,
+    color-mix(in oklch, var(--accent-glow) 60%, white) 305deg,
+    #fff 315deg,
+    color-mix(in oklch, var(--accent-glow) 60%, white) 325deg,
+    transparent 340deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: turnup-beam-spin 5.5s linear infinite;
+  pointer-events: none;
+}
+
+.tu-glass-btn:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.08),
+    inset 0 -3px 10px rgba(0, 0, 0, 0.35),
+    0 0 0 1px color-mix(in oklch, var(--accent) 38%, transparent),
+    0 36px 80px -28px color-mix(in oklch, var(--accent) 60%, transparent);
 }

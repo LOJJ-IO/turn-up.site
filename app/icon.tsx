@@ -45,7 +45,7 @@ export default function Icon() {
           <div
             style={{
               position: "absolute",
-              top: 24,
+              top: 42,
               left: 47,
               width: 18,
               height: 64,
